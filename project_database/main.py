@@ -4,7 +4,7 @@ import sqlite3
 import os
 from typing import List, Dict, Any, Optional, Tuple
 
-# ---------- Конфигурация таблиц (обновлена под финальную схему) ----------
+
 TABLE_CONFIG = {
     "positions": {
         "columns": ["position_name", "hourly_wage"],
@@ -31,7 +31,7 @@ TABLE_CONFIG = {
         "columns": ["employee_id", "full_name", "date", "shift_type", "planned_hours"],
         "headers": ["ID сотрудника", "ФИО", "Дата", "Тип смены", "Часов по плану"],
         "types": [int, str, str, str, int],
-        "pk": "id",                     # теперь обычный автоинкрементный ключ
+        "pk": "id",                     
         "tab_name": "График 5/2"
     },
     "worked_hours": {
@@ -51,7 +51,7 @@ TABLE_CONFIG = {
                     "Качество", "Штраф за пропуски", "Бонус за переработку",
                     "Бонус за качество", "Итоговый рейтинг"],
         "types": [int, str, str, int, float, int, int, float, float],
-        "pk": "id",                     # теперь обычный ключ
+        "pk": "id",                     
         "tab_name": "Рейтинг сотрудников"
     },
     "final_salaries": {
@@ -62,13 +62,13 @@ TABLE_CONFIG = {
                     "Почасовая ставка", "Базовая оплата", "Итоговый рейтинг",
                     "Множитель рейтинга", "Бонус", "Итоговая зарплата"],
         "types": [int, str, str, int, float, float, float, float, float, float],
-        "pk": "id",                     # теперь обычный ключ
+        "pk": "id",                     
         "tab_name": "Итоговые зарплаты"
     }
 }
 
 
-# ---------- Работа с базой данных ----------
+
 class DatabaseManager:
     def __init__(self, db_path: str = "database.db", sql_file: str = "restaurant_accounting.sql"):
         self.db_path = db_path
@@ -127,7 +127,7 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_all(self, table: str, pk_column: str) -> List[tuple]:
-        # Для таблиц с rowid оставляем возможность, но в текущей схеме таких нет
+        
         if pk_column == "rowid":
             return self.fetch_all(f"SELECT rowid, * FROM {table}")
         else:
@@ -145,7 +145,7 @@ class DatabaseManager:
             (employee_id,))
 
 
-# ---------- Окно входа ----------
+
 class LoginWindow(tk.Tk):
     def __init__(self, db: DatabaseManager):
         super().__init__()
@@ -211,7 +211,7 @@ class LoginWindow(tk.Tk):
         self.deiconify()
 
 
-# ---------- Базовые классы вкладок ----------
+
 class ReadOnlyTableTab(ttk.Frame):
     def __init__(self, parent, db: DatabaseManager, table_name: str, config: dict,
                  custom_query: str = None, query_params: tuple = ()):
@@ -225,13 +225,13 @@ class ReadOnlyTableTab(ttk.Frame):
         self.custom_query = custom_query
         self.query_params = query_params
 
-        # display_columns: добавляем pk как первый столбец, если его нет в columns
+        
         if self.pk == "rowid":
             self.display_columns = ("rowid", *self.columns)
             self.column_headers = ["ID", *self.headers]
         else:
-            # pk уже есть в columns? Нет, pk – это отдельный ключ, обычно не перечислен в columns.
-            # Но для таблиц, где pk = id, он не входит в columns. Поэтому добавляем.
+            
+            
             self.display_columns = (self.pk, *self.columns)
             self.column_headers = ["ID", *self.headers]
 
@@ -339,7 +339,7 @@ class EmployeeVacationTab(ttk.Frame):
         dialog.wait_window()
 
 
-# ---------- Окно HR ----------
+
 class HRMainWindow(tk.Toplevel):
     def __init__(self, login_window, db: DatabaseManager):
         super().__init__()
@@ -445,7 +445,7 @@ class FullCRUDTab(ttk.Frame):
         pk_val = self.get_selected_pk()
         if pk_val is None:
             return
-        # Получаем текущие значения
+        
         if self.pk == "rowid":
             row_data = self.db.fetch_one(f"SELECT * FROM {self.table_name} WHERE rowid = ?", (pk_val,))
         else:
@@ -453,15 +453,15 @@ class FullCRUDTab(ttk.Frame):
         if not row_data:
             messagebox.showerror("Ошибка", "Запись не найдена.")
             return
-        # row_data содержит все столбцы таблицы (включая pk? для обычного pk – да, если это SELECT *).
-        # Но в initial мы передаём только columns (без pk), поэтому надо сопоставить правильно.
-        # columns хранятся в self.columns (без pk), поэтому берём только соответствующие значения.
-        # Предположим, что структура row_data: (pk, col1, col2, ...) для обычного ключа, и (col1, col2, ...) для rowid.
+        
+        
+        
+        
         if self.pk == "rowid":
-            # row_data = (col1, col2, ...)
+            
             initial = {col: val for col, val in zip(self.columns, row_data)}
         else:
-            # row_data = (pk, col1, col2, ...)
+            
             initial = {col: val for col, val in zip(self.columns, row_data[1:])}
         fields = [(col, hdr, t) for col, hdr, t in zip(self.columns, self.headers, self.types)]
         dlg = RecordDialog(self, f"Редактировать запись ID={pk_val}", fields, initial)
@@ -562,7 +562,7 @@ class ReportTab(ttk.Frame):
         self.result_tree = None
 
     def clear_result(self):
-        # Удаляем все виджеты в result_frame (Treeview + Scrollbar)
+        
         for widget in self.result_frame.winfo_children():
             widget.destroy()
         self.result_tree = None
@@ -638,7 +638,7 @@ class ReportTab(ttk.Frame):
         except Exception as e:
             messagebox.showerror("Ошибка", str(e))
 
-# ---------- Окно работника ----------
+
 class EmployeeMainWindow(tk.Toplevel):
     def __init__(self, login_window, db: DatabaseManager, employee_id: int):
         super().__init__()
@@ -665,32 +665,32 @@ class EmployeeMainWindow(tk.Toplevel):
         info_tab = self._create_info_tab()
         self.notebook.add(info_tab, text="Мои данные")
 
-        # График (теперь pk id)
+        
         schedule_tab = ReadOnlyTableTab(
             self.notebook, self.db, "schedule_5_2", TABLE_CONFIG["schedule_5_2"],
             custom_query="SELECT * FROM schedule_5_2 WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(schedule_tab, text="Мой график")
 
-        # Отработанные часы
+        
         hours_tab = ReadOnlyTableTab(
             self.notebook, self.db, "worked_hours", TABLE_CONFIG["worked_hours"],
             custom_query="SELECT * FROM worked_hours WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(hours_tab, text="Мои часы")
 
-        # Отпуска
+        
         vacation_tab = EmployeeVacationTab(self.notebook, self.db, employee_id, self.full_name)
         self.notebook.add(vacation_tab, text="Мои отпуска")
 
-        # Рейтинг (теперь pk id)
+        
         rating_tab = ReadOnlyTableTab(
             self.notebook, self.db, "employee_rating", TABLE_CONFIG["employee_rating"],
             custom_query="SELECT * FROM employee_rating WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(rating_tab, text="Мой рейтинг")
 
-        # Зарплаты (теперь pk id)
+        
         salary_tab = ReadOnlyTableTab(
             self.notebook, self.db, "final_salaries", TABLE_CONFIG["final_salaries"],
             custom_query="SELECT * FROM final_salaries WHERE employee_id = ?",
@@ -727,7 +727,7 @@ class EmployeeMainWindow(tk.Toplevel):
         self.login_window.return_to_login(self)
 
 
-# ---------- Вспомогательный диалог ----------
+
 class RecordDialog(tk.Toplevel):
     def __init__(self, parent, title: str, fields: List[Tuple[str, str, type]],
                  initial: Optional[Dict[str, Any]] = None):
@@ -777,7 +777,7 @@ class RecordDialog(tk.Toplevel):
         self.destroy()
 
 
-# ---------- Точка входа ----------
+
 if __name__ == "__main__":
     db = DatabaseManager()
     try:
