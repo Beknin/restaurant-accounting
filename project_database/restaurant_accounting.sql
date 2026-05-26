@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `final_salaries` (
 -- =====================================================
 -- 1. Таблица Positions
 -- =====================================================
-INSERT INTO Positions (position_id, position_name, hourly_wage) VALUES
+INSERT OR IGNORE INTO Positions (position_id, position_name, hourly_wage) VALUES
 (1, 'Генеральный управляющий', 714.29),
 (2, 'HR-менеджер', 505.95),
 (3, 'Шеф-повар', 654.76),
@@ -83,7 +83,7 @@ INSERT INTO Positions (position_id, position_name, hourly_wage) VALUES
 -- =====================================================
 -- 2. Таблица Employees
 -- =====================================================
-INSERT INTO Employees (employee_id, full_name, position_id) VALUES
+INSERT OR IGNORE INTO Employees (employee_id, full_name, position_id) VALUES
 (1001, 'Иванов Сергей', 1),
 (1002, 'Смирнова Анна', 2),
 (1003, 'Кузнецов Дмитрий', 3),
@@ -113,7 +113,7 @@ INSERT INTO Employees (employee_id, full_name, position_id) VALUES
 -- =====================================================
 -- 3. Таблица Vacation_Requests
 -- =====================================================
-INSERT INTO Vacation_Requests (request_id, employee_id, full_name, start_date, end_date, status) VALUES
+INSERT OR IGNORE INTO Vacation_Requests (request_id, employee_id, full_name, start_date, end_date, status) VALUES
 (1, 1001, 'Иванов Сергей', '2026-01-05', '2026-01-11', 'Approved'),
 (2, 1003, 'Кузнецов Дмитрий', '2026-01-12', '2026-01-18', 'Approved'),
 (3, 1005, 'Соколов Максим', '2026-01-19', '2026-01-25', 'Approved'),
@@ -138,7 +138,7 @@ INSERT INTO Vacation_Requests (request_id, employee_id, full_name, start_date, e
 -- =====================================================
 -- 4. Таблица Schedule_5_2
 -- =====================================================
-INSERT INTO Schedule_5_2 (employee_id, full_name, date, shift_type, planned_hours) VALUES
+INSERT OR IGNORE INTO Schedule_5_2 (employee_id, full_name, date, shift_type, planned_hours) VALUES
 (1001, 'Иванов Сергей', '2026-01-01', 'Work', 8),
 (1001, 'Иванов Сергей', '2026-01-02', 'Work', 8),
 (1001, 'Иванов Сергей', '2026-01-03', 'DayOff', 0),
@@ -2418,7 +2418,7 @@ INSERT INTO Schedule_5_2 (employee_id, full_name, date, shift_type, planned_hour
 -- =====================================================
 -- 5. Таблица Worked_Hours
 -- =====================================================
-INSERT INTO Worked_Hours (record_id, employee_id, full_name, date, planned_hours, actual_hours, overtime_hours, attended, month, week_num) VALUES
+INSERT OR IGNORE INTO Worked_Hours (record_id, employee_id, full_name, date, planned_hours, actual_hours, overtime_hours, attended, month, week_num) VALUES
 (1,1001,'Иванов Сергей','2026-01-01',8,9,1,'Yes','2026-01',1),
 (2,1001,'Иванов Сергей','2026-01-02',8,10,2,'Yes','2026-01',1),
 (3,1001,'Иванов Сергей','2026-01-12',8,8,0,'Yes','2026-01',3),
@@ -3948,7 +3948,7 @@ INSERT INTO Worked_Hours (record_id, employee_id, full_name, date, planned_hours
 -- =====================================================
 -- 6. Таблица Employee_Rating
 -- =====================================================
-INSERT INTO Employee_Rating (employee_id, full_name, month, missed_days, quality, missed_penalty, overtime_bonus, quality_bonus, final_rating) VALUES
+INSERT OR IGNORE INTO Employee_Rating (employee_id, full_name, month, missed_days, quality, missed_penalty, overtime_bonus, quality_bonus, final_rating) VALUES
 (1001,'Иванов Сергей','2026-01',0,8.5,0,12,17,129),
 (1001,'Иванов Сергей','2026-02',0,8.5,0,12,17,129),
 (1001,'Иванов Сергей','2026-03',0,8.5,0,12,17,129),
@@ -4046,7 +4046,7 @@ INSERT INTO Employee_Rating (employee_id, full_name, month, missed_days, quality
 -- =====================================================
 -- 7. Таблица Final_Salaries
 -- =====================================================
-INSERT INTO Final_Salaries (employee_id, full_name, month, actual_hours, hourly_wage, base_pay, final_rating, rating_multiplier, bonus, final_salary) VALUES
+INSERT OR IGNORE INTO Final_Salaries (employee_id, full_name, month, actual_hours, hourly_wage, base_pay, final_rating, rating_multiplier, bonus, final_salary) VALUES
 (1001,'Иванов Сергей','2026-01',148,714.29,105714.92,129,1.29,30657.3268,136372.2468),
 (1001,'Иванов Сергей','2026-02',172,714.29,122857.88,129,1.29,35628.7852,158486.6652),
 (1001,'Иванов Сергей','2026-03',188,714.29,134286.52,129,1.29,38943.0908,173229.6108),
