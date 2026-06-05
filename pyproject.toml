@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "restaurant_accounting"
+version = "0.1.0"
+description = "Restaurant accounting system"
+authors = [{name = "candydragon"}]
+readme = "README.md"
+requires-python = ">=3.0"
+dependencies = []
+
+[tool.setuptools]
+packages = ["packages.core", "infra.db", "app.ui"]
+
+[tool.setuptools.package-dir]
+"" = "."
