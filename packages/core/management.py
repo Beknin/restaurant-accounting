@@ -4,9 +4,22 @@ from tkinter import messagebox
 import os
 
 class DatabaseManager:
-    def __init__(self, db_path: str = "database.db", sql_file: str = "restaurant_accounting.sql"):
+    def __init__(self, db_path: str = "database.db", 
+                 sql_file: str = "database_structure.sql",
+                 test_data_file: str = "database_test_data.sql",
+                 load_test_data: bool = True):
+        """
+        Args:
+            db_path: путь к файлу базы данных
+            sql_file: путь к файлу со структурой БД (CREATE TABLE)
+            test_data_file: путь к файлу с тестовыми данными (INSERT)
+            load_test_data: загружать ли тестовые данные (для продакшена может быть False)
+        """
         self.db_path = os.path.abspath(db_path)
         self.sql_file = sql_file
+        self.test_data_file = test_data_file
+        self.load_test_data = load_test_data
+        
         db_dir = os.path.dirname(self.db_path)
         if db_dir:
             os.makedirs(db_dir, exist_ok=True)
@@ -15,25 +28,42 @@ class DatabaseManager:
     def connect(self):
         self.conn = sqlite3.connect(self.db_path)
         self.conn.execute("PRAGMA foreign_keys = ON")
-        self._execute_sql_file()
+        self._execute_sql_file(self.sql_file, "структуры БД")
+        if self.load_test_data:
+            self._execute_sql_file(self.test_data_file, "тестовых данных")
 
     def close(self):
         if self.conn:
             self.conn.close()
             self.conn = None
 
-    def _execute_sql_file(self):
-        if not os.path.exists(self.sql_file):
-            messagebox.showwarning("Предупреждение",
-                                   f"Файл {self.sql_file} не найден. Структура БД не будет создана.")
-            return
+    def _execute_sql_file(self, file_path: str, description: str = ""):
+        """Выполняет SQL-скрипт из файла"""
+        if not os.path.exists(file_path):
+            # Для тестовых данных это не ошибка, просто предупреждение
+            if description == "тестовых данных":
+                print(f"Предупреждение: Файл {file_path} не найден. Тестовые данные не загружены.")
+                return
+            else:
+                messagebox.showwarning("Предупреждение",
+                                     f"Файл {file_path} не найден. {description} не будет создана.")
+                return
+        
         try:
-            with open(self.sql_file, 'r', encoding='utf-8') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 sql_script = f.read()
+            
+            # Проверяем, что скрипт не пустой
+            if not sql_script.strip():
+                return
+                
             self.conn.executescript(sql_script)
             self.conn.commit()
         except Exception as e:
-            messagebox.showerror("Ошибка SQL", f"Не удалось выполнить скрипт:\n{e}")
+            if description == "тестовых данных":
+                print(f"Предупреждение: Не удалось загрузить тестовые данные: {e}")
+            else:
+                messagebox.showerror("Ошибка SQL", f"Не удалось выполнить скрипт {description}:\n{e}")
 
     def execute(self, query: str, params: tuple = ()) -> sqlite3.Cursor:
         return self.conn.execute(query, params)
@@ -64,7 +94,6 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_all(self, table: str, pk_column: str) -> List[tuple]:
-        
         if pk_column == "rowid":
             return self.fetch_all(f"SELECT rowid, * FROM {table}")
         else:
