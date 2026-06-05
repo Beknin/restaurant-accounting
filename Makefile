@@ -4,14 +4,19 @@ CONTAINER_NAME_HR = restaurant-hr
 CONTAINER_NAME_EMP_PREFIX = restaurant-emp
 DB_DIR = ./infra/db
 DB_FILE = $(DB_DIR)/database.db
+PYTHON = python3
+MAIN_SCRIPT = app/ui/main.py
 
 .PHONY: help
 help:
 	@echo "Available targets:"
 	@echo "  make build              - Build Docker image"
 	@echo "  make rebuild            - Rebuild Docker image without cache"
-	@echo "  make run-hr             - Run HR panel"
-	@echo "  make run-employee ID=5  - Run employee panel"
+	@echo "  make run-hr             - Run HR panel (Docker)"
+	@echo "  make run-employee ID=5  - Run employee panel (Docker)"
+	@echo "  make run-local-hr       - Run HR panel (local)"
+	@echo "  make run-local-employee ID=5 - Run employee panel (local)"
+	@echo "  make run-local-login    - Run with login screen (local)"
 	@echo "  make stop-hr            - Stop HR container"
 	@echo "  make stop-employee ID=5 - Stop employee container"
 	@echo "  make stop-all           - Stop all containers"
@@ -57,6 +62,22 @@ run-employee:
 		-v $(PWD)/infra/db:/app/infra/db \
 		--network host \
 		$(IMAGE_NAME):$(IMAGE_TAG)
+
+.PHONY: run-local-hr
+run-local-hr:
+	ROLE=hr $(PYTHON) $(MAIN_SCRIPT)
+
+.PHONY: run-local-employee
+run-local-employee:
+	@if [ -z "$(ID)" ]; then \
+		echo "Error: Specify employee ID: make run-local-employee ID=5"; \
+		exit 1; \
+	fi
+	ROLE=employee EMPLOYEE_ID=$(ID) $(PYTHON) $(MAIN_SCRIPT)
+
+.PHONY: run-local-login
+run-local-login:
+	$(PYTHON) $(MAIN_SCRIPT)
 
 .PHONY: stop-hr
 stop-hr:
