@@ -88,6 +88,18 @@
         <mxCell id="jfDDwJbVVPMw_e9_QkqK-88" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Opening&lt;div&gt;hours&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="90" x="400" y="380" as="geometry" />
         </mxCell>
+        <mxCell id="oMEOc6HIaAlqvmJyePlO-148" edge="1" parent="1" source="oMEOc6HIaAlqvmJyePlO-146" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;shape=pipe;" target="jfDDwJbVVPMw_e9_QkqK-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oMEOc6HIaAlqvmJyePlO-146" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Registration" vertex="1">
+          <mxGeometry height="80" width="80" x="80" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="oMEOc6HIaAlqvmJyePlO-147" edge="1" parent="1" source="oMEOc6HIaAlqvmJyePlO-146" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;shape=pipe;" target="jfDDwJbVVPMw_e9_QkqK-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oMEOc6HIaAlqvmJyePlO-149" parent="1" style="triangle;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="15" width="20" x="60" y="282.5" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
