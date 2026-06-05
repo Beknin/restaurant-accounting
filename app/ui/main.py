@@ -210,12 +210,6 @@ class HRMainWindow(tk.Toplevel):
         self.geometry("1200x700")
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        menubar = tk.Menu(self)
-        self.config(menu=menubar)
-        file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Выйти в меню входа", command=self.on_close)
-        menubar.add_cascade(label="Файл", menu=file_menu)
-
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
@@ -230,7 +224,8 @@ class HRMainWindow(tk.Toplevel):
         self.notebook.add(report_tab, text="Отчёты")
 
     def on_close(self):
-        self.login_window.return_to_login(self)
+        self.destroy()
+        self.login_window.destroy()
 
 
 class FullCRUDTab(ttk.Frame):
@@ -514,44 +509,33 @@ class EmployeeMainWindow(tk.Toplevel):
         self.geometry("1000x600")
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
-        menubar = tk.Menu(self)
-        self.config(menu=menubar)
-        file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Выйти в меню входа", command=self.on_close)
-        menubar.add_cascade(label="Файл", menu=file_menu)
-
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
         info_tab = self._create_info_tab()
         self.notebook.add(info_tab, text="Мои данные")
 
-        
         schedule_tab = ReadOnlyTableTab(
             self.notebook, self.db, "schedule_5_2", TABLE_CONFIG["schedule_5_2"],
             custom_query="SELECT * FROM schedule_5_2 WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(schedule_tab, text="Мой график")
 
-        
         hours_tab = ReadOnlyTableTab(
             self.notebook, self.db, "worked_hours", TABLE_CONFIG["worked_hours"],
             custom_query="SELECT * FROM worked_hours WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(hours_tab, text="Мои часы")
 
-        
         vacation_tab = EmployeeVacationTab(self.notebook, self.db, employee_id, self.full_name)
         self.notebook.add(vacation_tab, text="Мои отпуска")
 
-        
         rating_tab = ReadOnlyTableTab(
             self.notebook, self.db, "employee_rating", TABLE_CONFIG["employee_rating"],
             custom_query="SELECT * FROM employee_rating WHERE employee_id = ?",
             query_params=(employee_id,))
         self.notebook.add(rating_tab, text="Мой рейтинг")
 
-        
         salary_tab = ReadOnlyTableTab(
             self.notebook, self.db, "final_salaries", TABLE_CONFIG["final_salaries"],
             custom_query="SELECT * FROM final_salaries WHERE employee_id = ?",
@@ -585,7 +569,8 @@ class EmployeeMainWindow(tk.Toplevel):
         return frame
 
     def on_close(self):
-        self.login_window.return_to_login(self)
+        self.destroy()
+        self.login_window.destroy()
 
 
 
