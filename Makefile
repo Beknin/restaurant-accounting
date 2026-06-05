@@ -1,34 +1,22 @@
-VENV_DIR = .venv
-SETUP_CMD ?= ./scripts/setup.sh
-CLEAN_CMD ?= ./scripts/clean.sh
-BUILD_LIB_CMD ?= ./scripts/build-lib.sh
-RUN_CMD ?= ./scripts/run.sh
+.PHONY: install test test-unit run docker-up docker-down docker-build
 
-.PHONY: help setup run test coverage build-lib publish-lib install-lib-local docs compose-up compose-down check clean
+install:
+	poetry install
 
-help:
-	@printf '%s\n' \
-		'setup              Prepare local environment' \
-		'run                Run the application' \
-		'test               Run tests' \
-		'coverage           Generate test coverage report' \
-		'build-lib          Build reusable component' \
-		'publish-lib        Publish reusable component' \
-		'install-lib-local  Install locally built component into consumer' \
-		'docs               Build documentation and diagrams' \
-		'compose-up         Build and start container stack' \
-		'compose-down       Stop and clean container stack' \
-		'check              Full local verification' \
-		'clean              Remove generated artifacts'
+test:
+	poetry run pytest tests/
 
-setup:
-	$(SETUP_CMD)
+test-unit:
+	poetry run pytest tests/unit/
 
-clean: $(VENV_DIR)
-	$(CLEAN_CMD)
+run:
+	poetry run python app/ui/main.py
 
-run: $(VENV_DIR)
-	$(RUN_CMD)
+docker-up:
+	docker compose up -d
 
-build-lib: $(VENV_DIR)
-	$(BUILD_LIB_CMD)
+docker-down:
+	docker compose down
+
+docker-build:
+	docker build -t restaurant-accounting .
