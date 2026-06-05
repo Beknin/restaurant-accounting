@@ -640,20 +640,17 @@ class RecordDialog(tk.Toplevel):
 
 
 if __name__ == "__main__":
-    # Определяем корень проекта
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     
-    # Пути к разделённым SQL-файлам
     db_path = os.path.join(base_dir, 'infra', 'db', 'database.db')
     structure_sql = os.path.join(base_dir, 'infra', 'db', 'database_structure.sql')
     test_data_sql = os.path.join(base_dir, 'infra', 'db', 'database_test_data.sql')
 
-    # Создаём менеджер БД с раздельными файлами
     db_manager = DatabaseManager(
         db_path=db_path,
         sql_file=structure_sql,
         test_data_file=test_data_sql,
-        load_test_data=True  # Загружаем тестовые данные для продакшена
+        load_test_data=True
     )
     
     try:
@@ -663,4 +660,36 @@ if __name__ == "__main__":
         exit(1)
     
     app = LoginWindow(db_manager)
-    app.mainloop()
+    
+    role = os.environ.get('ROLE', 'login')
+    emp_id_str = os.environ.get('EMPLOYEE_ID', None)
+    
+    if role == 'hr':
+        app.withdraw()
+        HRMainWindow(app, db_manager)
+        app.mainloop()
+    elif role == 'employee' and emp_id_str:
+        try:
+            emp_id = int(emp_id_str)
+            emp = db_manager.fetch_one(
+                "SELECT full_name FROM employees WHERE employee_id = ?", 
+                (emp_id,)
+            )
+            if emp:
+                app.withdraw()
+                EmployeeMainWindow(app, db_manager, emp_id)
+                app.mainloop()
+            else:
+                messagebox.showerror("Ошибка", f"Сотрудник с ID {emp_id} не найден в базе данных")
+                app.destroy()
+                exit(1)
+        except ValueError:
+            messagebox.showerror("Ошибка", "Переменная окружения EMPLOYEE_ID должна содержать число")
+            app.destroy()
+            exit(1)
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось запустить интерфейс сотрудника: {e}")
+            app.destroy()
+            exit(1)
+    else:
+        app.mainloop()
