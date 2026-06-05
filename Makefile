@@ -3,8 +3,9 @@ SETUP_CMD ?= ./scripts/setup.sh
 CLEAN_CMD ?= ./scripts/clean.sh
 BUILD_LIB_CMD ?= ./scripts/build-lib.sh
 RUN_CMD ?= ./scripts/run.sh
+FORMAT_CMD ?= ./scripts/format.sh
 
-.PHONY: help setup run test coverage build-lib publish-lib install-lib-local docs compose-up compose-down check clean
+.PHONY: setup clean run build-lib format
 
 help:
 	@printf '%s\n' \
@@ -32,3 +33,6 @@ run: $(VENV_DIR)
 
 build-lib: $(VENV_DIR)
 	$(BUILD_LIB_CMD)
+
+format: $(VENV_DIR)
+	$(FORMAT_CMD)
