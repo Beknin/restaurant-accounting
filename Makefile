@@ -1,4 +1,4 @@
-.PHONY: install test test-unit run docker-up docker-down
+.PHONY: install test test-unit run docker-up docker-down docker-build
 
 install:
 	poetry install
@@ -16,4 +16,7 @@ docker-up:
 	docker compose up -d
 
 docker-down:
-	docker compose down 
+	docker compose down
+
+docker-build:
+	docker build -t restaurant-accounting .
