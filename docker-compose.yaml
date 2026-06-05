@@ -1,11 +1,30 @@
+version: '3.8'
 
 services:
-  app:
-    image: restaurant-accounting
+  # Сервис для HR-сотрудников
+  hr-panel:
+    build: .
+    image: restaurant-app:latest
+    container_name: restaurant-hr
     environment:
-      - DISPLAY=${DISPLAY}         # пробрасывает переменную с хоста
+      - DISPLAY=${DISPLAY}
+      - ROLE=hr
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix # монтирует папку с Unix-сокетами X-сервера с хоста внутрь контейнера.
-    # Делает контейнер интерактивным
-    stdin_open: true
-    tty: true
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./infra/db:/app/infra/db
+    network_mode: host
+    
+  employee-panel:
+    build: .
+    image: restaurant-app:latest
+    container_name: restaurant-emp-${EMPLOYEE_ID:-5}
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROLE=employee
+      - EMPLOYEE_ID=${EMPLOYEE_ID:-5}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./infra/db:/app/infra/db
+    network_mode: host
+    profiles:
+      - employee
