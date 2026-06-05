@@ -47,6 +47,9 @@ __pycache__/
 # Build files
 *.egg-info
 
+# Virtual environment
+*.venv
+
 # Windows shortcuts
 *.lnk
 
