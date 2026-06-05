@@ -641,8 +641,8 @@ class RecordDialog(tk.Toplevel):
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__))) # корень проекта
-    db_path = os.path.join(base_dir, 'infra/db', 'database.db')
-    sql_path = os.path.join(base_dir, 'infra/db', 'restaurant_accounting.sql')
+    db_path = os.path.join(base_dir, 'infra\db', 'database.db')
+    sql_path = os.path.join(base_dir, 'infra\db', 'restaurant_accounting.sql')
 
     db_manager = DatabaseManager(db_path=db_path, sql_file=sql_path)
     db = db_manager
@@ -651,6 +651,5 @@ if __name__ == "__main__":
     except Exception as e:
         messagebox.showerror("Критическая ошибка", f"Не удалось подключиться к БД: {e}")
         exit(1)
-
     app = LoginWindow(db)
     app.mainloop()
