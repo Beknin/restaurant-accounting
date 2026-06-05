@@ -640,16 +640,27 @@ class RecordDialog(tk.Toplevel):
 
 
 if __name__ == "__main__":
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__))) # корень проекта
-    db_path = os.path.join(base_dir, 'infra\db', 'database.db')
-    sql_path = os.path.join(base_dir, 'infra\db', 'restaurant_accounting.sql')
+    # Определяем корень проекта
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    
+    # Пути к разделённым SQL-файлам
+    db_path = os.path.join(base_dir, 'infra', 'db', 'database.db')
+    structure_sql = os.path.join(base_dir, 'infra', 'db', 'database_structure.sql')
+    test_data_sql = os.path.join(base_dir, 'infra', 'db', 'database_test_data.sql')
 
-    db_manager = DatabaseManager(db_path=db_path, sql_file=sql_path)
-    db = db_manager
+    # Создаём менеджер БД с раздельными файлами
+    db_manager = DatabaseManager(
+        db_path=db_path,
+        sql_file=structure_sql,
+        test_data_file=test_data_sql,
+        load_test_data=True  # Загружаем тестовые данные для продакшена
+    )
+    
     try:
-        db.connect()
+        db_manager.connect()
     except Exception as e:
         messagebox.showerror("Критическая ошибка", f"Не удалось подключиться к БД: {e}")
         exit(1)
-    app = LoginWindow(db)
+    
+    app = LoginWindow(db_manager)
     app.mainloop()
