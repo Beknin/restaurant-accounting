@@ -4,8 +4,9 @@ CLEAN_CMD ?= ./scripts/clean.sh
 BUILD_LIB_CMD ?= ./scripts/build-lib.sh
 RUN_CMD ?= ./scripts/run.sh
 FORMAT_CMD ?= ./scripts/format.sh
+TESTS_CMD ?= ./scripts/tests.sh
 
-.PHONY: setup clean run build-lib format
+.PHONY: setup clean run build-lib format run-tests
 
 help:
 	@printf '%s\n' \
@@ -36,3 +37,6 @@ build-lib: $(VENV_DIR)
 
 format: $(VENV_DIR)
 	$(FORMAT_CMD)
+
+run-tests: $(VENV_DIR)
+	$(TESTS_CMD)
