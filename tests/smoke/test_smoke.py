@@ -8,7 +8,8 @@ from tkinter import messagebox
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-from packages.core.management import DatabaseManager, TABLE_CONFIG
+from packages.core.management import DatabaseManager
+from packages.core.db_structure import TABLE_CONFIG
 
 # ----------------------------------------------------------------------
 # Фикстуры
