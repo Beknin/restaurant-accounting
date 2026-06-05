@@ -4,8 +4,8 @@ import sqlite3
 import os
 import sys
 import tempfile
-from unittest.mock import patch
 from tkinter import messagebox
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 from main import DatabaseManager, TABLE_CONFIG
