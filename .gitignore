@@ -40,7 +40,12 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
+
+# Pytest cache
 __pycache__/
+
+# Build files
+*.egg-info
 
 # Windows shortcuts
 *.lnk
