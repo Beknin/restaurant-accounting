@@ -1,0 +1,11 @@
+
+services:
+  app:
+    image: restaurant-accounting
+    environment:
+      - DISPLAY=${DISPLAY}         # пробрасывает переменную с хоста
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # монтирует папку с Unix-сокетами X-сервера с хоста внутрь контейнера.
+    # Делает контейнер интерактивным
+    stdin_open: true
+    tty: true
