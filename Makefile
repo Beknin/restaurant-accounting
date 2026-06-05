@@ -1,4 +1,4 @@
-.PHONY: install test test-unit run
+.PHONY: install test test-unit run docker-up docker-down
 
 install:
 	poetry install
@@ -11,3 +11,9 @@ test-unit:
 
 run:
 	poetry run python app/ui/main.py
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down 
